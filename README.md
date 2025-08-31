@@ -7,7 +7,7 @@ GL-based heatmap plugin for [Leaflet](https://leafletjs.com/). Allows you to vis
 ## Install
 
 ```bash
-npm install leaflet.glheatmap
+npm install @fernir10/leaflet.heatmap
 ```
 ```bash
 npm install leaflet
@@ -42,6 +42,6 @@ map.fitBounds(L.polygon(polygon).getBounds());
 points.forEach(([lat, lng, value]) => L.marker([lat, lng]).bindPopup(`Value: ${value}`).addTo(map));
 ```
 
-## Lecense
+## License
 
 MIT © Nikolay Alekseev
