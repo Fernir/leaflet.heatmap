@@ -18,7 +18,7 @@ npm install leaflet
 ```js
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import heatmap from 'leaflet.glheatmap';
+import heatmap from '@fernir10/leaflet.heatmap';
 
 const map = L.map('map').setView([55.75, 37.61], 10);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
