@@ -2,7 +2,7 @@
 
 GL-based heatmap plugin for [Leaflet](https://leafletjs.com/). Allows you to visualize a heat map of huge arrays of points with WebGL.
 
-![demo](prtscr.png)
+![demo](https://raw.githubusercontent.com/Fernir/leaflet.heatmap/main/prtscr.png)
 
 ## Install
 
