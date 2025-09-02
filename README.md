@@ -6,15 +6,12 @@ GL-based heatmap plugin for [Leaflet](https://leafletjs.com/). Allows you to vis
 
 ## Demo
 
-[100 points](https://fernir.github.io/leaflet.heatmap/)
+### <a href="https://fernir.github.io/leaflet.heatmap/" target="_blank">100 random points example</a>
 
 ## Install
 
 ```bash
 npm install @fernir10/leaflet.heatmap
-```
-```bash
-npm install leaflet
 ```
 
 ## Example
