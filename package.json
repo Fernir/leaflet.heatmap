@@ -1,6 +1,6 @@
 {
   "name": "@fernir10/leaflet.heatmap",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "GL-based heatmap plugin for Leaflet",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
