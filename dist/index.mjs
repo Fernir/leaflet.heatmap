@@ -3,7 +3,7 @@
  * (c) 2025 Alekseev Nikolay
  * MIT License – see LICENSE file
  */
-const p = L.GridLayer.extend({
+L.GridLayer.heatmap = L.GridLayer.extend({
   options: {
     tileSize: 256,
     colorTable: [
@@ -39,7 +39,7 @@ const p = L.GridLayer.extend({
   createTile(t, e) {
     const o = document.createElement("canvas");
     o.width = o.height = this.options.tileSize;
-    const c = o.getContext("2d");
+    const u = o.getContext("2d");
     this._gl.viewport(0, 0, this.options.tileSize, this.options.tileSize), this._gl.clear(this._gl.COLOR_BUFFER_BIT), this.drawTile(this._gl, t, this.options.tileSize, this.options.tileSize);
     const i = new Uint8Array(this.options.tileSize ** 2 * 4);
     this._gl.readPixels(
@@ -51,24 +51,24 @@ const p = L.GridLayer.extend({
       this._gl.UNSIGNED_BYTE,
       i
     );
-    const h = c.createImageData(this.options.tileSize, this.options.tileSize), _ = this.createMask(t);
+    const c = u.createImageData(this.options.tileSize, this.options.tileSize), _ = this.createMask(t);
     for (let r = 0; r < this.options.tileSize; r++)
       for (let a = 0; a < this.options.tileSize; a++) {
-        const s = ((this.options.tileSize - r - 1) * this.options.tileSize + a) * 4, u = (r * this.options.tileSize + a) * 4, T = _[u + 3] / 255;
-        for (let n = 0; n < 3; n++) h.data[u + n] = i[s + n];
-        h.data[u + 3] = i[s + 3] * T;
+        const s = ((this.options.tileSize - r - 1) * this.options.tileSize + a) * 4, h = (r * this.options.tileSize + a) * 4, T = _[h + 3] / 255;
+        for (let n = 0; n < 3; n++) c.data[h + n] = i[s + n];
+        c.data[h + 3] = i[s + 3] * T;
       }
-    return c.putImageData(h, 0, 0), setTimeout(() => e(null, o), 0), o;
+    return u.putImageData(c, 0, 0), setTimeout(() => e(null, o), 0), o;
   },
   createMask(t) {
     if (!this.multiPolygon) return new Uint8ClampedArray(this.options.tileSize ** 2 * 4);
     const e = document.createElement("canvas");
     e.width = e.height = this.options.tileSize;
     const o = e.getContext("2d");
-    return o.clearRect(0, 0, e.width, e.height), this.multiPolygon.forEach((c) => {
-      o.beginPath(), c.forEach((i, h) => {
+    return o.clearRect(0, 0, e.width, e.height), this.multiPolygon.forEach((u) => {
+      o.beginPath(), u.forEach((i, c) => {
         const _ = this._map.project(L.latLng(i[0], i[1]), t.z), r = _.x - t.x * this.options.tileSize, a = _.y - t.y * this.options.tileSize;
-        h === 0 ? o.moveTo(r, a) : o.lineTo(r, a);
+        c === 0 ? o.moveTo(r, a) : o.lineTo(r, a);
       }), o.closePath(), o.fillStyle = "white", o.fill();
     }), o.getImageData(0, 0, this.options.tileSize, this.options.tileSize).data;
   },
@@ -104,23 +104,23 @@ const p = L.GridLayer.extend({
                 vec4 color=texture2D(u_colorTable,vec2(val,0.5));
                 gl_FragColor=vec4(color.rgb,${(((s = this.options) == null ? void 0 : s.opacity) || 0.9).toFixed(1)});
             }
-        `, c = (u, T) => {
-      const n = t.createShader(u);
+        `, u = (h, T) => {
+      const n = t.createShader(h);
       if (t.shaderSource(n, T), t.compileShader(n), !t.getShaderParameter(n, t.COMPILE_STATUS)) throw new Error(t.getShaderInfoLog(n));
       return n;
     }, i = t.createProgram();
-    t.attachShader(i, c(t.VERTEX_SHADER, e)), t.attachShader(i, c(t.FRAGMENT_SHADER, o)), t.linkProgram(i), t.useProgram(i);
-    const h = t.createBuffer();
-    t.bindBuffer(t.ARRAY_BUFFER, h), t.bufferData(t.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), t.STATIC_DRAW);
+    t.attachShader(i, u(t.VERTEX_SHADER, e)), t.attachShader(i, u(t.FRAGMENT_SHADER, o)), t.linkProgram(i), t.useProgram(i);
+    const c = t.createBuffer();
+    t.bindBuffer(t.ARRAY_BUFFER, c), t.bufferData(t.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), t.STATIC_DRAW);
     const _ = t.getAttribLocation(i, "a_position");
     t.enableVertexAttribArray(_), t.vertexAttribPointer(_, 2, t.FLOAT, !1, 0, 0);
     const r = new Uint8Array(this.options.colorTable.length * 3);
-    this.options.colorTable.forEach((u, T) => {
-      const n = parseInt(u.slice(1), 16);
+    this.options.colorTable.forEach((h, T) => {
+      const n = parseInt(h.slice(1), 16);
       r.set([n >> 16 & 255, n >> 8 & 255, n & 255], T * 3);
     });
     const a = t.createTexture();
-    if (t.bindTexture(t.TEXTURE_2D, a), t.texImage2D(t.TEXTURE_2D, 0, t.RGB, this.options.colorTable.length, 1, 0, t.RGB, t.UNSIGNED_BYTE, r), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_MIN_FILTER, t.NEAREST), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_MAG_FILTER, t.NEAREST), ["S", "T"].forEach((u) => t.texParameteri(t.TEXTURE_2D, t["TEXTURE_WRAP_" + u], t.CLAMP_TO_EDGE)), this._colorTexture = a, !t.getExtension("OES_texture_float")) throw new Error("OES_texture_float not supported");
+    if (t.bindTexture(t.TEXTURE_2D, a), t.texImage2D(t.TEXTURE_2D, 0, t.RGB, this.options.colorTable.length, 1, 0, t.RGB, t.UNSIGNED_BYTE, r), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_MIN_FILTER, t.NEAREST), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_MAG_FILTER, t.NEAREST), ["S", "T"].forEach((h) => t.texParameteri(t.TEXTURE_2D, t["TEXTURE_WRAP_" + h], t.CLAMP_TO_EDGE)), this._colorTexture = a, !t.getExtension("OES_texture_float")) throw new Error("OES_texture_float not supported");
     this._pointTexture = t.createTexture(), this._uniforms = {
       resolution: t.getUniformLocation(i, "u_resolution"),
       tileOrigin: t.getUniformLocation(i, "u_tileOrigin"),
@@ -132,14 +132,16 @@ const p = L.GridLayer.extend({
       textureWidth: t.getUniformLocation(i, "u_textureWidth")
     }, this._program = i;
   },
-  drawTile(t, e, o, c) {
-    const { tileSize: i } = this.options, h = this.points, _ = h.length, r = 2 ** Math.ceil(Math.log2(_)), a = new Float32Array(r * 4);
-    h.forEach((s, u) => {
+  drawTile(t, e, o, u) {
+    const { tileSize: i } = this.options, c = this.points, _ = c.length, r = 2 ** Math.ceil(Math.log2(_)), a = new Float32Array(r * 4);
+    c.forEach((s, h) => {
       const T = this._map.project(L.latLng(s[0], s[1]), e.z);
-      a.set([T.x, T.y, s[2], 0], u * 4);
-    }), t.activeTexture(t.TEXTURE1), t.bindTexture(t.TEXTURE_2D, this._pointTexture), t.texImage2D(t.TEXTURE_2D, 0, t.RGBA, r, 1, 0, t.RGBA, t.FLOAT, a), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_MIN_FILTER, t.NEAREST), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_MAG_FILTER, t.NEAREST), ["S", "T"].forEach((s) => t.texParameteri(t.TEXTURE_2D, t["TEXTURE_WRAP_" + s], t.CLAMP_TO_EDGE)), t.viewport(0, 0, o, c), t.clearColor(0, 0, 0, 0), t.clear(t.COLOR_BUFFER_BIT), t.useProgram(this._program), t.uniform2f(this._uniforms.resolution, o, c), t.uniform2f(this._uniforms.tileOrigin, e.x * i, e.y * i), t.uniform1f(this._uniforms.idwMin, this.idwMinMax[0]), t.uniform1f(this._uniforms.idwMax, this.idwMinMax[1]), t.uniform1i(this._uniforms.numPoints, _), t.uniform1i(this._uniforms.textureWidth, r), t.activeTexture(t.TEXTURE0), t.bindTexture(t.TEXTURE_2D, this._colorTexture), t.uniform1i(this._uniforms.colorTable, 0), t.activeTexture(t.TEXTURE1), t.bindTexture(t.TEXTURE_2D, this._pointTexture), t.uniform1i(this._uniforms.pointTexture, 1), t.drawArrays(t.TRIANGLE_STRIP, 0, 4);
+      a.set([T.x, T.y, s[2], 0], h * 4);
+    }), t.activeTexture(t.TEXTURE1), t.bindTexture(t.TEXTURE_2D, this._pointTexture), t.texImage2D(t.TEXTURE_2D, 0, t.RGBA, r, 1, 0, t.RGBA, t.FLOAT, a), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_MIN_FILTER, t.NEAREST), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_MAG_FILTER, t.NEAREST), ["S", "T"].forEach((s) => t.texParameteri(t.TEXTURE_2D, t["TEXTURE_WRAP_" + s], t.CLAMP_TO_EDGE)), t.viewport(0, 0, o, u), t.clearColor(0, 0, 0, 0), t.clear(t.COLOR_BUFFER_BIT), t.useProgram(this._program), t.uniform2f(this._uniforms.resolution, o, u), t.uniform2f(this._uniforms.tileOrigin, e.x * i, e.y * i), t.uniform1f(this._uniforms.idwMin, this.idwMinMax[0]), t.uniform1f(this._uniforms.idwMax, this.idwMinMax[1]), t.uniform1i(this._uniforms.numPoints, _), t.uniform1i(this._uniforms.textureWidth, r), t.activeTexture(t.TEXTURE0), t.bindTexture(t.TEXTURE_2D, this._colorTexture), t.uniform1i(this._uniforms.colorTable, 0), t.activeTexture(t.TEXTURE1), t.bindTexture(t.TEXTURE_2D, this._pointTexture), t.uniform1i(this._uniforms.pointTexture, 1), t.drawArrays(t.TRIANGLE_STRIP, 0, 4);
   }
-}), m = (t, e) => new p(t, e);
+});
+L.heatmap = (t, e) => new L.GridLayer.heatmap(t, e);
+const p = L.heatmap;
 export {
-  m as default
+  p as default
 };

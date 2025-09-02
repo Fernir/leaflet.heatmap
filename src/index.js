@@ -4,7 +4,7 @@
  * MIT License – see LICENSE file
  */
 
-const GLHeatmap = L.GridLayer.extend({
+L.GridLayer.heatmap = L.GridLayer.extend({
     options: {
         tileSize: 256,
         colorTable: [
@@ -228,4 +228,6 @@ const GLHeatmap = L.GridLayer.extend({
     },
 });
 
-export default (points, options) =>  new GLHeatmap(points, options);
+L.heatmap = (points, options) =>  new L.GridLayer.heatmap(points, options);
+
+export default L.heatmap;
