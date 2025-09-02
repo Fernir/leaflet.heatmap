@@ -4,6 +4,10 @@ GL-based heatmap plugin for [Leaflet](https://leafletjs.com/). Allows you to vis
 
 ![demo](https://raw.githubusercontent.com/Fernir/leaflet.heatmap/main/prtscr.png)
 
+## Demo
+
+[100 points](https://fernir.github.io/leaflet.heatmap/)
+
 ## Install
 
 ```bash
