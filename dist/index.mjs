@@ -23,10 +23,11 @@ L.GridLayer.heatmap = L.GridLayer.extend({
       "#aa293c",
       "#8e2138"
     ],
-    opacity: 0.9
+    opacity: 0.9,
+    smooth: !1
   },
   initialize(t = [], e) {
-    if (L.setOptions(this, e), this.points = t, this.idwMinMax = this.computeMinMax(t), this.multiPolygon = this.options.polygon, this._glCanvas = document.createElement("canvas"), Object.assign(this._glCanvas, { width: this.options.tileSize, height: this.options.tileSize }), this._gl = this._glCanvas.getContext("webgl"), !this._gl) throw new Error("WebGL not supported");
+    if (L.setOptions(this, e), this.points = t, this.idwMinMax = this.computeMinMax(t), this.multiPolygon = this.options.polygon, this.smooth = this.options.smooth, this._glCanvas = document.createElement("canvas"), Object.assign(this._glCanvas, { width: this.options.tileSize, height: this.options.tileSize }), this._gl = this._glCanvas.getContext("webgl"), !this._gl) throw new Error("WebGL not supported");
     this.initWebGL(this._gl), L.GridLayer.prototype.initialize.call(this, e);
   },
   setPoints(t = []) {
@@ -120,7 +121,7 @@ L.GridLayer.heatmap = L.GridLayer.extend({
       r.set([n >> 16 & 255, n >> 8 & 255, n & 255], T * 3);
     });
     const a = t.createTexture();
-    if (t.bindTexture(t.TEXTURE_2D, a), t.texImage2D(t.TEXTURE_2D, 0, t.RGB, this.options.colorTable.length, 1, 0, t.RGB, t.UNSIGNED_BYTE, r), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_MIN_FILTER, t.NEAREST), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_MAG_FILTER, t.NEAREST), ["S", "T"].forEach((h) => t.texParameteri(t.TEXTURE_2D, t["TEXTURE_WRAP_" + h], t.CLAMP_TO_EDGE)), this._colorTexture = a, !t.getExtension("OES_texture_float")) throw new Error("OES_texture_float not supported");
+    if (t.bindTexture(t.TEXTURE_2D, a), console.log(this.options), t.texImage2D(t.TEXTURE_2D, 0, t.RGB, this.options.colorTable.length, 1, 0, t.RGB, t.UNSIGNED_BYTE, r), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_MIN_FILTER, this.smooth ? t.LINEAR : t.NEAREST), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_MAG_FILTER, this.smooth ? t.LINEAR : t.NEAREST), ["S", "T"].forEach((h) => t.texParameteri(t.TEXTURE_2D, t["TEXTURE_WRAP_" + h], t.CLAMP_TO_EDGE)), this._colorTexture = a, !t.getExtension("OES_texture_float")) throw new Error("OES_texture_float not supported");
     this._pointTexture = t.createTexture(), this._uniforms = {
       resolution: t.getUniformLocation(i, "u_resolution"),
       tileOrigin: t.getUniformLocation(i, "u_tileOrigin"),
