@@ -13,7 +13,7 @@ GL-based heatmap plugin for [Leaflet](https://leafletjs.com/). Allows you to vis
 
 ## Demo
 
-Check out the live demo: [https://fernir.github.io/leaflet.heatmap/demo](https://fernir.github.io/leaflet.heatmap/demo)
+Check out the live demo: [https://fernir.github.io/leaflet.heatmap](https://fernir.github.io/leaflet.heatmap)
 
 ## Installation
 
