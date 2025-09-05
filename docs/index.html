@@ -38,7 +38,7 @@
         [Math.min(...points.map(p=>p[0])), Math.min(...points.map(p=>p[1]))]
     ];
 
-    L.heatmap(points, { polygon: [polygon] }).addTo(map);
+    L.heatmap(points, { polygon: [polygon], smooth: true }).addTo(map);
 
     points.forEach(([lat, lng, value]) => {
         L.marker([lat, lng]).bindPopup(`Value: ${value}`).addTo(map);

@@ -12,6 +12,7 @@ L.GridLayer.heatmap = L.GridLayer.extend({
             '#fb8d4d', '#f77049', '#f05445', '#e03e41', '#c6323f', '#aa293c', '#8e2138',
         ],
         opacity: 0.9,
+        smooth: false,
     },
 
     initialize(points = [], options) {
@@ -19,6 +20,7 @@ L.GridLayer.heatmap = L.GridLayer.extend({
         this.points = points;
         this.idwMinMax = this.computeMinMax(points);
         this.multiPolygon = this.options.polygon;
+        this.smooth = this.options.smooth;
 
         this._glCanvas = document.createElement('canvas');
         Object.assign(this._glCanvas, { width: this.options.tileSize, height: this.options.tileSize });
@@ -163,9 +165,10 @@ L.GridLayer.heatmap = L.GridLayer.extend({
         });
         const colorTex = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, colorTex);
+        console.log(this.options);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, this.options.colorTable.length, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, colorData);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.smooth ? gl.LINEAR : gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this.smooth ? gl.LINEAR : gl.NEAREST);
         ['S', 'T'].forEach((d) => gl.texParameteri(gl.TEXTURE_2D, gl['TEXTURE_WRAP_' + d], gl.CLAMP_TO_EDGE));
         this._colorTexture = colorTex;
 
