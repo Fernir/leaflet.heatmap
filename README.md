@@ -4,17 +4,24 @@ GL-based heatmap plugin for [Leaflet](https://leafletjs.com/). Allows you to vis
 
 ![demo](https://raw.githubusercontent.com/Fernir/leaflet.heatmap/main/prtscr.png)
 
+## Features
+
+* Visualize large datasets with WebGL
+* Supports IDW (Inverse Distance Weighting) interpolation
+* Smooth transitions and animations
+* Easy integration with Leaflet maps
+
 ## Demo
 
-### <a href="https://fernir.github.io/leaflet.heatmap/" target="_blank">100 random points example</a>
+Check out the live demo: [https://fernir.github.io/leaflet.heatmap/demo](https://fernir.github.io/leaflet.heatmap/demo)
 
-## Install
+## Installation
 
 ```bash
 npm install @fernir10/leaflet.heatmap
 ```
 
-## Example
+## Usage
 
 ```js
 import L from 'leaflet';
